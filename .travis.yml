@@ -20,7 +20,7 @@ install:
 
 script:
   - ng lint
-  - ng build --dev --base-href https://hvsharma63.github.io/fitness-tracker/
+  - ng build --prod --base-href https://hvsharma63.github.io/fitness-tracker/
 
 deploy:
   provider: pages
