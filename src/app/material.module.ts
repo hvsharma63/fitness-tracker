@@ -4,8 +4,8 @@ import { MatInputModule, MatButtonModule, MatFormFieldModule, MatIconModule } fr
 const modules = [
     MatButtonModule,
     MatIconModule,
-    MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatInputModule
 ];
 @NgModule({
     imports: [...modules],
