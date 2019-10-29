@@ -8,14 +8,14 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 export class NewTrainingComponent implements OnInit {
 
   @Output() trainingStart = new EventEmitter<void>();
-  trainingTypes = []
+  trainingTypes = [];
   constructor() { }
 
   ngOnInit() {
-    this.trainingTypes = ['Crunches', 'Touch Toes', 'Side Lunges', 'Burpees']
+    this.trainingTypes = ['Crunches', 'Touch Toes', 'Side Lunges', 'Burpees'];
   }
 
-  onStartTraining(){
+  onStartTraining() {
     this.trainingStart.emit();
   }
 

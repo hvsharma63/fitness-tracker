@@ -13,7 +13,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSideNavToggle(){
+  onSideNavToggle() {
     this.sideNavToggle.emit();
   }
 }

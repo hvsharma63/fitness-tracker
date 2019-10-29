@@ -13,7 +13,7 @@ export class SidenavListComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSideNavClose(){
+  onSideNavClose() {
     this.sideNavClose.emit();
   }
 }
