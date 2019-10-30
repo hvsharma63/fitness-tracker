@@ -1,17 +1,17 @@
 <mat-nav-list>
-    <a mat-list-item routerLink='/signup' (click)="onSideNavClose()">
+    <a mat-list-item routerLink='/signup' (click)="onSideNavClose()" *ngIf="!loggedInStatus">
         <mat-icon>face</mat-icon>
         <span class="nav-caption">Signup</span>
     </a>
-    <a mat-list-item routerLink='/login' (click)="onSideNavClose()">
+    <a mat-list-item routerLink='/login' (click)="onSideNavClose()" *ngIf="!loggedInStatus">
         <mat-icon>input</mat-icon>
         <span class="nav-caption">Login</span>
     </a>
-    <a mat-list-item routerLink='/training' (click)="onSideNavClose()">
+    <a mat-list-item routerLink='/training' (click)="onSideNavClose()" *ngIf="loggedInStatus">
         <mat-icon>fitness_center</mat-icon>
         <span class="nav-caption">Training</span>
     </a>
-    <mat-list-item>
+    <mat-list-item *ngIf="loggedInStatus" (click)="onLogout()">
         <button mat-icon-button>
             <mat-icon>eject</mat-icon>
             <span class="nav-caption">Logout</span>
