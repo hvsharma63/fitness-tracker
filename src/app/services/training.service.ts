@@ -11,12 +11,12 @@ export class TrainingService {
 
     exerciseChanged = new Subject<Exercise>();
     exercisesChanged = new Subject<Exercise[]>();
+    finishExercisesChanged = new Subject<Exercise[]>();
     constructor(private db: AngularFirestore) { }
 
 
     private availableExercises: Exercise[] = [];
     private runningExercise: Exercise;
-    private exercises: Exercise[] = [];
 
     fetchAvailableExercises() {
         return this.db.collection('availableExercises')
@@ -45,7 +45,7 @@ export class TrainingService {
     }
 
     completeExercise() {
-        this.exercises.push({
+        this.addDataToDatabase({
             ...this.runningExercise,
             date: new Date(),
             state: 'completed'
@@ -55,7 +55,7 @@ export class TrainingService {
     }
 
     cancelExercise(progress: number) {
-        this.exercises.push({
+        this.addDataToDatabase({
             ...this.runningExercise,
             duration: this.runningExercise.duration * (progress / 100),
             calories: this.runningExercise.calories * (progress / 100),
@@ -70,7 +70,17 @@ export class TrainingService {
         return { ...this.runningExercise };
     }
 
-    getCompletedOrCancelledExercies() {
-        return this.exercises.slice();
+    fetchCompletedOrCancelledExercies() {
+        this.db
+            .collection('finisedExercises')
+            .valueChanges()
+            .subscribe((exercises: Exercise[]) => {
+                console.log(exercises);
+                this.finishExercisesChanged.next(exercises);
+            });
+    }
+
+    private addDataToDatabase(exercise: Exercise) {
+        this.db.collection('finisedExercises').add(exercise);
     }
 }
