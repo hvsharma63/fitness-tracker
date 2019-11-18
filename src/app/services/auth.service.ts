@@ -4,6 +4,7 @@ import { AuthData } from '../models/auth-data.model';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { TrainingService } from './training.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,12 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class AuthService {
 
   isUserLoggedIn = new Subject<boolean>();
-  private user: User;
+  private isAuthenticated = false;
 
   constructor(
     private router: Router,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private trainingService: TrainingService
   ) { }
 
   registerUser(authData: AuthData) {
@@ -41,20 +43,18 @@ export class AuthService {
   }
 
   logout() {
-    this.user = null;
+    this.trainingService.cancelSubscriptions();
+    this.afAuth.auth.signOut();
     this.isUserLoggedIn.next(false);
     this.router.navigate(['/login']);
   }
 
-  getUser() {
-    return { ...this.user };
-  }
-
   isAuth() {
-    return this.user != null;
+    return this.isAuthenticated;
   }
 
   private postSuccess() {
+    this.isAuthenticated = true;
     this.isUserLoggedIn.next(true);
     this.router.navigate(['/training']);
   }

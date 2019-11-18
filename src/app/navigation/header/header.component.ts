@@ -25,7 +25,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onLogout() {
-    this.onSideNavToggle();
     this.authService.logout();
   }
 
