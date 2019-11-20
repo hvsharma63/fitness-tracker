@@ -3,6 +3,8 @@ import { User } from '../models/user.model';
 import { AuthData } from '../models/auth-data.model';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { TrainingService } from './training.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,44 +12,51 @@ import { Router } from '@angular/router';
 export class AuthService {
 
   isUserLoggedIn = new Subject<boolean>();
-  private user: User;
+  private isAuthenticated = false;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private afAuth: AngularFireAuth,
+    private trainingService: TrainingService
   ) { }
 
+  initAuthListener() {
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        this.isAuthenticated = true;
+        this.isUserLoggedIn.next(true);
+        this.router.navigate(['/training']);
+      } else {
+        this.trainingService.cancelSubscriptions();
+        this.isUserLoggedIn.next(false);
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
   registerUser(authData: AuthData) {
-    this.user = {
-      email: authData.email,
-      userId: Math.round(Math.random() * 10000).toString()
-    };
-    this.postSuccess();
+    this.afAuth.auth
+      .createUserWithEmailAndPassword(authData.email, authData.password)
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   login(authData: AuthData) {
-    this.user = {
-      email: authData.email,
-      userId: Math.round(Math.random() * 10000).toString()
-    };
-    this.postSuccess();
+    this.afAuth.auth
+      .signInWithEmailAndPassword(authData.email, authData.password)
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   logout() {
-    this.user = null;
-    this.isUserLoggedIn.next(false);
-    this.router.navigate(['/login']);
-  }
-
-  getUser() {
-    return { ...this.user };
+    this.afAuth.auth.signOut();
   }
 
   isAuth() {
-    return this.user != null;
+    return this.isAuthenticated;
   }
 
-  private postSuccess() {
-    this.isUserLoggedIn.next(true);
-    this.router.navigate(['/training']);
-  }
+
 }
