@@ -27,6 +27,10 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
     this.exercisesSubscription = this.trainingService.exercisesChanged.subscribe(
       exercises => (this.exercises = exercises)
     );
+    this.fetchAvailableExercises();
+  }
+
+  fetchAvailableExercises() {
     this.trainingService.fetchAvailableExercises();
   }
 
@@ -35,8 +39,12 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.loadingSubscription.unsubscribe();
-    this.exercisesSubscription.unsubscribe();
+    if (this.loadingSubscription) {
+      this.loadingSubscription.unsubscribe();
+    }
+    if (this.exercisesSubscription) {
+      this.exercisesSubscription.unsubscribe();
+    }
   }
 
 }
